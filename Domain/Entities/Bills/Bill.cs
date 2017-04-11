@@ -18,7 +18,7 @@
                 throw new ArgumentOutOfRangeException(nameof(sum), "Sum must be greater than 0");
 
             Client = client;
-            Sum = sum;
+            Sum = Math.Round(sum, 2, MidpointRounding.AwayFromZero);
             CreatedAt = DateTime.UtcNow;
         }
 
@@ -34,9 +34,9 @@
 
         public DateTime? PayedAt { get; protected set; }
 
-        public bool IsPayed => PayedAt != null;
+        public bool WasPayed => PayedAt != null;
 
-        public string DisplayName => $"{CreatedAt:MM.yyyy}-{Number:D6}";
+        public string DisplayNumber => $"{CreatedAt:MM.yyyy}-{Number:D6}";
 
         protected internal void SetNumber(int number)
         {
@@ -44,6 +44,14 @@
                 throw new ArgumentOutOfRangeException(nameof(number), "Number must be greater than or equals 1");
 
             Number = number;
+        }
+
+        public void Pay()
+        {
+            if (WasPayed)
+                throw new InvalidOperationException("Bill already payed");
+
+            PayedAt = DateTime.UtcNow;
         }
     }
 }

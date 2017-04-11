@@ -11,9 +11,11 @@ using Microsoft.Extensions.Logging;
 namespace WebApi
 {
     using System.Reflection;
+    using Application.Infrastructure.Filters;
     using global::Autofac;
     using global::Autofac.Extensions.DependencyInjection;
     using Microsoft.AspNetCore.Routing;
+    using Newtonsoft.Json.Serialization;
 
     public class Startup
     {
@@ -35,7 +37,13 @@ namespace WebApi
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddMvc();
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(typeof(CustomExceptionFilterAttribute));
+            }).AddJsonOptions(options =>
+            {
+                options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+            });
             services.AddSingleton(Configuration);
             services.AddRouting();
 
@@ -66,9 +74,12 @@ namespace WebApi
                     template: "{controller}/{action}");
 
                 routes.MapRoute(
-                    name: "default",
+                    name: "default_with_action",
                     template: "{controller}/{id}/{action}");
 
+                routes.MapRoute(
+                    name: "default_no_action",
+                    template: "{controller}/{id}");
             });
 
             

@@ -38,6 +38,9 @@
 
         public void ChangeName(Client client, string name)
         {
+            if (client == null)
+                throw new EntityNotFoundException("Client with specified Id not found");
+
             client.SetName(name);
         }
 

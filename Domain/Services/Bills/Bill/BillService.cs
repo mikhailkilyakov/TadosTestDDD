@@ -29,9 +29,9 @@
                 EndDateTime = lastDayOfMonth 
             });
             
-            int number = lastBillInMonth?.Number ?? 1;
+            int number = lastBillInMonth?.Number ?? 0;
 
-            entity.SetNumber(number);
+            entity.SetNumber(number + 1);
 
             _repository.Add(entity);
         }
